@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.devMode" value="true" />
+	<package name="pack" namespace="/" extends="struts-default">
+
+		<interceptors>
+			<interceptor name="authenticationInterceptor"
+				class="com.techlabs.action.AuthenticationInterceptor" />
+			<interceptor-stack name="secureStack">
+				<interceptor-ref name="authenticationInterceptor"></interceptor-ref>
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<action name="">
+			<result> /index.jsp</result>
+		</action>
+
+		<action name="loginJsp">
+			<result> /WEB-INF/view/login.jsp</result>
+		</action>
+
+		<action name="register" class="com.techlabs.action.RegisterAction"
+			method="execute">
+			<interceptor-ref name="fileUpload">
+				<param name="maximumSize">971520</param>
+				<param name="allowedTypes">image/png,image/gif,image/jpg,
+					image/jpeg,image/pjpeg</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="success">/WEB-INF/view/login.jsp</result>
+			<result name="input">/WEB-INF/view/register.jsp</result>
+		</action>
+
+		<action name="login" class="com.techlabs.action.LoginAction"
+			method="execute">
+			<result name="input">/WEB-INF/view/login.jsp</result>
+			<result name="customerPage" type="redirect">home</result>
+			<!-- <result name="adminPage" type="redirect">/adminHome</result> -->
+			<result name="adminPage">/angular/index.html</result>
+		</action>
+
+
+
+		<action name="logout" class="com.techlabs.action.LogoutAction"
+			method="execute">
+			<!-- <interceptor-ref name="secureStack" /> -->
+			<result name="input">/WEB-INF/view/login.jsp</result>
+			<result name="success">/WEB-INF/view/logout.jsp</result>
+
+		</action>
+
+		<action name="home" class="com.techlabs.action.HomeAction"
+			method="execute">
+			<interceptor-ref name="secureStack" />
+			<result name="input" type="redirect">/login</result>
+			<result name="success">/WEB-INF/view/home.jsp</result>
+		</action>
+
+
+		<action name="profile" class="com.techlabs.action.ProfileAction"
+			method="execute">
+			<interceptor-ref name="secureStack" />
+			<result name="input" type="redirect">/login</result>
+			<result name="show">/WEB-INF/view/profile.jsp</result>
+			<result name="success" type="redirect">/home</result>
+		</action>
+
+		<action name="passbook" class="com.techlabs.action.PassbookAction"
+			method="execute">
+			<interceptor-ref name="secureStack" />
+			<result name="input" type="redirect">/login</result>
+			<result name="none">/WEB-INF/view/passbook.jsp</result>
+			<result name="success" type="redirect">/passbook</result>
+
+		</action>
+
+		<action name="transaction" class="com.techlabs.action.TransactionAction"
+			method="execute">
+			<interceptor-ref name="secureStack" />
+			<result name="input" type="redirect">/login</result>
+			<result name="show">/WEB-INF/view/transaction.jsp</result>
+			<result name="success">/WEB-INF/view/transaction_success.jsp</result>
+		</action>
+
+		<action name="forgetPassword" class="com.techlabs.action.ForgetPasswordAction"
+			method="execute">
+<!-- 			<interceptor-ref name="secureStack" /> -->
+			<result name="input">/WEB-INF/view/forgetPassword.jsp</result>
+			<result name="success">/WEB-INF/view/forgetPassword_success.jsp</result>
+		</action>
+
+		<action name="CheckEmailAvailability" class="com.techlabs.action.CheckAvailibilityEmailAction"
+			method="execute">
+			<result name="success">/WEB-INF/view/register.jsp</result>
+		</action>
+		<action name="CheckPanNoAvailability" class="com.techlabs.action.CheckAvailibilityPanNoAction"
+			method="execute">
+			<result name="input">/WEB-INF/view/register.jsp</result>
+		</action>
+
+		<action name="CheckAadharNoAvailability"
+			class="com.techlabs.action.CheckAadharNoAvailibilityAction" method="execute">
+			<result name="input">/WEB-INF/view/register.jsp</result>
+		</action>
+
+		<action name="changeStatusCtrl" class="com.techlabs.action.ChangeStatusAction"
+			method="execute">
+			<result>/angular/view/changeStatus.html</result> 
+			<result name="input" >/angular/index.html</result>
+		</action>
+		
+		<action name="notifyPromotion" class="com.techlabs.action.NotifyPromotionAction"
+			method="execute">
+			<result>/angular/view/notifyPromotion.html</result> 
+			<result name="input" >/angular/index.html</result>
+		</action>
+		
+
+	</package>
+
+
+	<package name="default" namespace="/" extends="json-default">
+	
+		<action name="adminHome" class="com.techlabs.action.AdminHomeAction"
+			method="execute">
+			<result type="json">
+				<param name="root">list</param>
+				<param name="excludeNullProperties">true</param>
+				<param name="noCache">true</param>
+			</result>
+		</action>
+		
+		<action name="adminPassbook" class="com.techlabs.action.AdminPassbookAction"
+			method="execute">
+			<result type="json">
+				<param name="root">adminPassbookTrans</param>
+				<param name="excludeNullProperties">true</param>
+				<param name="noCache">true</param>
+			</result>
+		</action>
+		
+			<action name="adminStatics" class="com.techlabs.action.AdminStaticsAction"
+			method="execute">
+			<result type="json">
+				<param name="root">staticsDetails</param>
+				<param name="excludeNullProperties">true</param>
+				<param name="noCache">true</param>
+			</result>
+		</action>
+
+	</package>
+</struts>

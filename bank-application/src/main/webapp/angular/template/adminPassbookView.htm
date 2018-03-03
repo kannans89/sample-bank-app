@@ -1,0 +1,42 @@
+<div class="container" >
+	<table class="table table-hover">
+		<tr>		
+			<th class="col-sm-1">Trans Id</th>
+			<th class="col-sm-3">Amount</th>
+			<th class="col-sm-2">Date</th>
+			<th class="col-sm-3">Time</th>
+			<th class="col-sm-3">Type</th>
+		</tr>
+		<tr ng-repeat="x in transactions track by $index ">	
+			<td><span>{{x.transId}}</span></td>
+			<td>{{x.amount}}</td>
+			<td>{{x.date}}</td>
+			<td>{{x.time}}</td>
+			<td>{{x.type}}</td>
+		</tr>
+	</table><br>
+	
+	<table class="table table-hover">
+		<tr>		
+			<th class="col-sm-2">Account No</th>
+			<th class="col-sm-1">First Name</th>
+			<th class="col-sm-1">Middle Name</th>
+			<th class="col-sm-1">Last Name</th>
+			<th class="col-sm-2">Email Id</th>
+			<th class="col-sm-2">Mobile No</th>
+			<th class="col-sm-2">Pan No</th>
+			<th class="col-sm-1">Aadhar No</th>
+		</tr>
+		<tr>	
+			<td>{{transactions[0].account.accNo}}</td>
+			<td>{{transactions[0].account.firstName}}</td>
+			<td>{{transactions[0].account.middleName}}</td>
+			<td>{{transactions[0].account.lastName}}</td>
+			<td>{{transactions[0].account.emailId}}</td>
+			<td>{{transactions[0].account.mobileNo}}</td>
+			<td>{{transactions[0].account.panNo}}</td>
+			<td>{{transactions[0].account.aadharNo}}</td>		
+		</tr>
+	</table>
+	
+</div>
