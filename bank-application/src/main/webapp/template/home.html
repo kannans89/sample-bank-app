@@ -1,0 +1,90 @@
+<style>
+    .container {
+        width: 100%;
+    }
+</style>
+<script>
+//for all checkbox
+$('#checkedStatus').click(function(event) { 
+    if(this.checked) {
+        $(':checkbox').each(function() {
+            this.checked = true;                        
+        });
+        $('#btn').attr("disabled",false);
+    }
+    else {
+        $(':checkbox').each(function() {
+            this.checked = false; 
+        });    
+        $('#btn').attr("disabled",true);
+    }
+});
+//for Single checkbox
+/* $('#checkBoxStatus').click(function() {  
+	alert("Clicked chk");
+	alert("Clicked single");
+    if($(this).is(':checked')) {
+        $('#btn').attr("disabled",false);
+        alert("Clicked single if true");
+    }   
+    else {
+        $('#btn').attr("disabled",true);
+        alert("Clicked single else true");
+    }    
+}); */
+</script>
+<section>
+<form theme="bootstrap" cssClass="form-horizontal">
+    <div class="container">
+        <div class="panel panel-info">
+           	<div class="panel-heading">List Of Accounts
+           		<span style="float: right;">
+           			<button class="btn btn-primary" style="width: 80px;height: 30px" id="btn" ng-disabled="enabledNotify" ng-click="sendNotification()">Notify</button>
+           		</span>
+           		<br><br>
+           	</div>
+            <div class="panel-body">
+           		<span style="float: left"> 
+           			<select ng-model="selectedItem" class="form-control">
+           				<option value="">Sort By</option>
+  							<option ng-repeat="item in items" value="{{item}}">{{item}}</option>
+					</select>
+		  		</span>
+		  		<div class="col-xs-6 col-md-4" style="float: right">
+      				<div class="input-group">
+   						<input type="text" class="form-control" placeholder="Search" id="txtSearch" ng-model="searchText"/>
+   							<div class="input-group-btn">
+        						<button class="btn btn-primary" type="submit">
+        							<span class="glyphicon glyphicon-search"></span>
+        						</button>
+   							</div>
+   					</div>
+    			</div>
+		  		
+            <table class="table" >
+            	<tr><td></td></tr>
+            	<tr class="info">
+                	<th><input type="checkbox" id="checkedStatus" class="form-control" ng-model="checkedStatus" ng-change="notifyAll(checkedStatus)"></th>
+                	<th>Sr.No.</th>
+                	<th>User Id</th>
+                	<th>Current Status</th>
+                	<th>Balance</th>
+                	<th>View</th>
+                </tr>
+                <tr ng-repeat="x in accounts | orderBy : selectedItem : true | filter:searchText track by $index">
+                    <td><input class="form-control" type="checkbox" ng-model="checkBoxStatus" ng-change="notify(x.userId,checkBoxStatus)"></td>
+                    <td>{{$index+1}}</td>
+                    <td>{{x.userId}}</td>
+                    <td>
+         				<select class="form-control" ng-model="selectedStatus" ng-options="item for item in accountStatus" ng-change="changeStatus(selectedStatus,x.userId)"></select>
+               	 		<span ng-bind="selectedStatus=x.accountStatus" hidden="true"></span>
+					</td>
+                    <td>{{x.balance}}</td>
+                    <td><a ng-href="#!view?userId={{x.userId}}">view</a></td>
+                </tr>
+            </table>
+          </div>
+        </div>
+    </div>
+    </form>
+</section>

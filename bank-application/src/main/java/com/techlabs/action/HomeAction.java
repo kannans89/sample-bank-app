@@ -1,55 +1,37 @@
 package com.techlabs.action;
 
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
-
-import com.opensymphony.xwork2.ActionSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ModelDriven;
 import com.techlabs.entity.Account;
-import com.techlabs.vm.HomeVM;
+import com.techlabs.service.HomeService;
+import com.techlabs.viewmodel.HomeViewModel;
 
-//import Decoder.BASE64Encoder;
-
-public class HomeAction extends ActionSupport implements SessionAware, ModelDriven<HomeVM> {
-
-	private static final long serialVersionUID = 1L;
-	private Map<String, Object> session;
-	private HomeVM homeVM;
+public class HomeAction implements Action,SessionAware,ModelDriven<HomeViewModel>
+{
+	@Autowired
+	private HomeService homeService;
+	private Map<String,Object> session;
+	private HomeViewModel homeVM;
 	
-	
-
 	@Override
-	public String execute() throws Exception {
-		HttpServletResponse response = ServletActionContext.getResponse();
-		response.setContentType("text/csv");
-		homeVM.setAccount((Account) session.get("user"));
-		homeVM.setName(homeVM.getAccount().getImageName());
-
-		byte data[] = homeVM.getAccount().getUserImage();
-		//BASE64Encoder base64Encoder = new BASE64Encoder();
-		StringBuilder imageString = new StringBuilder();
-		imageString.append("data:image/png;base64,");
-		//imageString.append(base64Encoder.encode(data));
-		imageString.append(data);
-		homeVM.setImage(imageString.toString());
-
-		System.out.println(homeVM.getAccount().getBalance());
-		return SUCCESS;
-	}
-
-	@Override
-	public void setSession(Map<String, Object> session) {
-		this.session = session;
-	}
-
-	@Override
-	public HomeVM getModel() {
-		homeVM = new HomeVM();
+	public HomeViewModel getModel() {
+		homeVM=new HomeViewModel();
 		return homeVM;
 	}
-
+	
+	@Override
+	public String execute() throws Exception {
+		Account account=(Account) session.get("account");
+		homeVM.setAccount(account);
+		homeVM.setBase64EncodedImage(homeService.getBase64EncodedImage());
+		return Action.SUCCESS;  
+	}
+	
+	@Override
+	public void setSession(Map<String, Object> session) {
+		this.session=session;
+	}
 }

@@ -1,0 +1,31 @@
+<style>
+    .container {
+        width: 100%;
+    }
+</style>
+<section>
+    <div class="container">
+        <div class="panel panel-success">
+            <div class="panel-heading">Welcome to Santy's Bank </div>
+            <div class="panel-body"> 
+               <input type="text" value="{{userId}}" ng-model="userId" hidden="true"> 
+            
+            <table class="table" ng-repeat="x in accounts | filter :userId">
+				<tr class="active"><td align="right"></td><td><img alt="Profile Picture" src=""
+							 border="2px" style="height: 200px;width: 200px"/></td></tr>
+				<tr class="info"><td align="right">Account Number  : </td><td>{{x.accountNo}}</td></tr>
+				<tr class="info"><td align="right">Account Balance :</td><td>{{x.balance}}</td></tr>
+				<tr class="info"><td align="right">First Name      :</td><td>{{x.firstName}}</td></tr>
+				<tr class="info"><td align="right">Middle Name     :</td><td>{{x.middleName}}</td></tr>
+				<tr class="info"><td align="right">Last Name       :</td><td>{{x.lastName}}</td></tr>
+				<tr class="info"><td align="right">Email           :</td><td>{{x.email}}</td></tr>
+				<tr class="info"><td align="right">Mobile          :</td><td>{{x.mobile}}</td></tr>
+				<tr class="info"><td align="right">Address         :</td><td>{{x.address}}</td></tr>
+				<tr class="info"><td align="right">Aadhar Number   :</td><td>{{x.aadharNo}}</td></tr>
+				<tr class="info"><td align="right">PAN Number      :</td><td>{{x.panNo}}</td></tr>
+			</table>
+            
+           </div>
+        </div>
+    </div>
+</section>

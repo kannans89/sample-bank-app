@@ -1,81 +1,113 @@
 package com.techlabs.entity;
 
-import java.util.List;
-import java.util.UUID;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Column;
 
+import org.hibernate.annotations.OrderBy;
 @Entity
+@Table(name="account_table")
 public class Account {
-	@Id
-	private String accNo;
-	private double balance;
 
 	private String firstName;
 	private String middleName;
 	private String lastName;
-
-	private long mobileNo;
-	private String emailId;
-
+	private Long mobile;
+	private String email;
+	private String address;
+	private Long aadharNo;
 	private String panNo;
-	private String aadharNo;
+	@Column(columnDefinition = "LONGBLOB")
+	private byte[] profileImage;
+	private String userId;
+	private String password;
+	private double balance;
+	private String accountStatus;
+	private int loginAttempts;
+	private Date date;
+	private Time time;
+	
+	@Id
+	private String accountNo;
+	@OneToMany(fetch = FetchType.EAGER, mappedBy="account",cascade=CascadeType.ALL)
+	@OrderBy(clause = "date desc,time desc")
+	private Set<BankTransaction> bankTransaction;
 
-	private byte[] userImage;
-	private String imageName;
-	
-	@Enumerated(EnumType.STRING)
-	private Status status;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	private Address address;
-	
-//
-//	@OneToMany(cascade = CascadeType.ALL)
-//	private List<BankTransaction>bankTransactions;
-	
 	public Account() {
-		System.out.println("Account-constr");
 	}
-
-	public Account(double balance, String firstName, String middleName, String lastName, long mobileNo, String emailId,
-			String panNo, String aadharNo, byte[] byteImage, Address address, String imageName,Status status) {
-		super();
-
-		UUID uuid = UUID.randomUUID();
-		this.accNo = uuid.toString().replace("-", "");
-		this.balance = balance;
-
+	
+	public Account(String firstName, String middleName, String lastName,
+			Long mobile, String email, String address, Long aadharNo,
+			String panNo, byte[] profileImage,String userID,
+			String password, double balance, String accountNo,String accountStatus,int loginAttempts, Date date,Time time) {
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
-
-		this.mobileNo = mobileNo;
-		this.emailId = emailId;
-
-		this.panNo = panNo;
-		this.aadharNo = aadharNo;
-
-		this.userImage = byteImage;
-		this.imageName=imageName;
+		this.mobile = mobile;
+		this.email = email;
 		this.address = address;
-		
-		this.status=status;
-	}
-
-	public double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(double balance) {
+		this.aadharNo = aadharNo;
+		this.panNo = panNo;
+		this.profileImage = profileImage;
+		this.userId=userID;
+		this.password = password;
 		this.balance = balance;
+		this.accountNo = accountNo;
+		this.accountStatus=accountStatus;
+		this.loginAttempts=loginAttempts;
+		this.date = date;
+		this.time=time;
+		bankTransaction=new HashSet<BankTransaction>();
+	}
+	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Time getTime() {
+		return time;
+	}
+
+	public void setTime(Time time) {
+		this.time = time;
+	}
+
+	public int getLoginAttempts() {
+		return loginAttempts;
+	}
+
+	public void setLoginAttempts(int loginAttempts) {
+		this.loginAttempts = loginAttempts;
+	}
+	
+	public String getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(String accountStatus) {
+		this.accountStatus = accountStatus;
+	}
+
+	
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getFirstName() {
@@ -102,20 +134,36 @@ public class Account {
 		this.lastName = lastName;
 	}
 
-	public long getMobileNo() {
-		return mobileNo;
+	public Long getMobile() {
+		return mobile;
 	}
 
-	public void setMobileNo(long mobileNo) {
-		this.mobileNo = mobileNo;
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
 	}
 
-	public String getEmailId() {
-		return emailId;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Long getAadharNo() {
+		return aadharNo;
+	}
+
+	public void setAadharNo(Long aadharNo) {
+		this.aadharNo = aadharNo;
 	}
 
 	public String getPanNo() {
@@ -126,56 +174,38 @@ public class Account {
 		this.panNo = panNo;
 	}
 
-	public String getAadharNo() {
-		return aadharNo;
+	public byte[] getProfileImage() {
+		return profileImage;
 	}
 
-	public void setAadharNo(String aadharNo) {
-		this.aadharNo = aadharNo;
+	public void setProfileImage(byte[] profileImage) {
+		this.profileImage = profileImage;
 	}
 
-	public Address getAddress() {
-		return address;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setAddress(Address address) {
-		this.address = address;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getAccNo() {
-		return accNo;
+	public double getBalance() {
+		return balance;
 	}
 
-	public byte[] getUserImage() {
-		return userImage;
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 
-	public void setUserImage(byte[] userImage) {
-		this.userImage = userImage;
+	public String getAccountNo() {
+		return accountNo;
+	}
+	public Set<BankTransaction> getBankTransaction() {
+		return bankTransaction;
 	}
 
-	public String getImageName() {
-		return imageName;
+	public void setBankTransaction(Set<BankTransaction> transaction) {
+		this.bankTransaction = transaction;
 	}
-
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-//
-//	public List<BankTransaction> getBankTransactions() {
-//		return bankTransactions;
-//	}
-//
-//	public void setBankTransactions(List<BankTransaction> bankTransactions) {
-//		this.bankTransactions = bankTransactions;
-//	}
-	
 }

@@ -8,46 +8,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 import com.techlabs.entity.Account;
-import com.techlabs.services.BankServices;
-import com.techlabs.vm.ProfileVM;
+import com.techlabs.service.HomeService;
+import com.techlabs.viewmodel.ProfileViewModel;
 
-public class ProfileAction extends ActionSupport implements SessionAware, ModelDriven<ProfileVM> {
-
-	private static final long serialVersionUID = 1L;
-	private Map<String, Object> session;
-	private ProfileVM profileVM;
+@SuppressWarnings("serial")
+public class ProfileAction extends ActionSupport implements ModelDriven<ProfileViewModel>,SessionAware
+{
 
 	@Autowired
-	private BankServices bankServices;
-
+	private HomeService homeService;
+	private Map<String,Object> session;
+	private ProfileViewModel profileViewModel;
+	
 	@Override
-	public String execute() throws Exception {
-		profileVM.setReadOnly(true);
-		if (profileVM.isEditFlag()) {
-			profileVM.setReadOnly(false);
-		}
-
-		if (profileVM.isProfilePostBack()) {
-
-			System.out.println("in prfoileileaction post");
-			bankServices.updateAccount(((Account) session.get("user")), profileVM.getAccount());
-
-			return SUCCESS;
-		}
-		profileVM.setAccount((Account) session.get("user"));
-		
-		return "show";
+	public ProfileViewModel getModel() {
+		profileViewModel=new ProfileViewModel();
+		return profileViewModel;
 	}
 
 	@Override
 	public void setSession(Map<String, Object> session) {
-		this.session = session;
+		this.session=session;
 	}
 
 	@Override
-	public ProfileVM getModel() {
-		profileVM = new ProfileVM();
-		return profileVM;
+	public String execute() {
+		if(session.get("editProfile")!=null) {
+			addActionMessage("Your Profile Updated Successfully");
+			session.remove("editProfile");
+		}
+		
+		if(session.get("changePassword")!=null) {
+			addActionMessage("Your Password Reset Successfully...!!! Your Login Crediantials "
+					+ "are sent on your Email..Please check..!!!");
+			session.remove("changePassword");
+		}
+		
+		profileViewModel.setAccount((Account) session.get("account"));
+		profileViewModel.setBase64EncodedImage(homeService.getBase64EncodedImage());
+		return "success";
 	}
-
 }

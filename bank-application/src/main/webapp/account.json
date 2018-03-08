@@ -1,0 +1,27 @@
+[
+    {
+        "userId": 1001
+        , "currentStatus": "Active"
+        , "balance": "1000"
+    }, 
+
+    {
+        "userId": 1002
+        , "currentStatus": "Deactive"
+        , "balance": "2000"
+    },
+    
+    {
+        "userId": 1003
+        , "currentStatus": "Active"
+        , "balance": "1000"
+    }, 
+
+    {
+        "userId": 1004
+        , "currentStatus": "Deactive"
+        , "balance": "2000"
+    }
+    
+    
+]

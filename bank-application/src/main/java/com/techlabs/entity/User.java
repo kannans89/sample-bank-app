@@ -1,63 +1,47 @@
 package com.techlabs.entity;
 
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="user_table")
 public class User {
-
-	@Id
-	private String userId;
-	
-	@Enumerated(EnumType.STRING)
-	private Role role;
-	private String password;
-	
-	@OneToOne(cascade = CascadeType.ALL)
+	@Id  
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
+	private String role;
+	@JoinColumn
+	@OneToOne
 	private Account account;
 	
-	private int NumberOfFailAttemps;
-	@Enumerated(EnumType.STRING)
-	private Status status;
-	
-
 	public User() {
-		System.out.println("User-constr");
+		// TODO Auto-generated constructor stub
 	}
-
-	public User( Role role, String password, Account account,int n,Status status) {
-		super();
-		
-		UUID uuid = UUID.randomUUID();
-		this.userId = uuid.toString().replace("-", "");
-		this.role = role;
-		this.password=password;
-		this.account=account;
-		
-		this.NumberOfFailAttemps=n;
-		this.status=status;
 	
-		System.out.println("User-para_constr");
+	public User(String role, Account account) {
+		this.role = role;
+		this.account = account;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
-	public String getUserId() {
-		return userId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public Role getRole() {
+	public String getRole() {
 		return role;
 	}
 
-	
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
-		System.out.println("User-setRole");
 	}
 
 	public Account getAccount() {
@@ -67,31 +51,4 @@ public class User {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public int getNumberOfFailAttemps() {
-		return NumberOfFailAttemps;
-	}
-
-	public void setNumberOfFailAttemps(int numberOfFailAttemps) {
-		NumberOfFailAttemps = numberOfFailAttemps;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
-
-
 }

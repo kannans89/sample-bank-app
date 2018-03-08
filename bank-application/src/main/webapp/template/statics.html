@@ -1,0 +1,32 @@
+<style>
+    .container {
+        width: 100%;
+    }
+</style>
+<section id="section">
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Statics</div>
+            
+            <div class="panel-body" style="float: center;">
+            <div class="col-sm-6 text-left">
+            	<span style="float: left;">Sort By
+           		<select ng-model="selectedItem" ng-change="selectedOption(selectedItem)">
+           			<option value="">Select</option>
+  					<option ng-repeat="item in items" value="{{item}}">{{item}}</option>
+				</select>
+		  		</span><br><hr>
+                <table class="table" ng-model="statics">
+					<tr class="info"><td></td><td>1. No. of Active Accounts :</td><td>{{statics.noOfActiveAccounts}}</td></tr>   
+					<tr class="info"><td></td><td>2. No. of Deactive Accounts :</td><td>{{statics.noOfDeactiveAccounts}}</td></tr>              
+					<tr class="info"><td></td><td>3. No. of Accounts Opened :</td><td>{{statics.noOfOpenedAccounts}}</td></tr>   
+					<tr class="info"><td></td><td>4. No. of Transactions Done :</td><td>{{statics.noOfTransactions}}</td></tr> 
+					<tr class="info"><td></td><td>5. Total Amount Deposited :</td><td>{{statics.totalAmountDeposited}}</td></tr>   
+					<tr class="info"><td></td><td>6. Total Amount Withdraw :</td><td>{{statics.totalAmountWithdrawal}}</td></tr>
+					<tr class="info"><td></td><td>7. Reachest Account Holder:</td><td><a ng-href="#!view?userId={{statics.reachUserId}}">{{statics.reachUserId}}</a></td></tr>             
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

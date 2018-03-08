@@ -5,54 +5,67 @@ import java.util.Map;
 import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
-import com.techlabs.entity.Account;
-import com.techlabs.services.BankServices;
-import com.techlabs.vm.TransactionVM;
+import com.techlabs.service.TransactionService;
+import com.techlabs.viewmodel.TransactionViewModel;
 
-//@Component
-public class TransactionAction extends ActionSupport implements SessionAware, ModelDriven<TransactionVM> {
-
-	private static final long serialVersionUID = 1L;
-	private Map<String, Object> session;
-	private TransactionVM transactionVM;
-
+@SuppressWarnings("serial")
+public class TransactionAction extends ActionSupport implements ModelDriven<TransactionViewModel>,SessionAware
+{
 	@Autowired
-	private BankServices services;
-
+	private TransactionService transactionService;
+	private TransactionViewModel transactionVM;
+	@SuppressWarnings("unused")
+	private Map<String,Object> session;
+	
 	@Override
-	public String execute() throws Exception {
-		if (transactionVM.isPostBack()) {
-			
-			transactionVM.setAccount((Account) session.get("user"));
-			if (!services.transactionOperation(transactionVM.getAmount(), transactionVM.getType(), transactionVM.getAccount())) {
-				transactionVM.setErrorMsg("withdrawl fail");
-			} else {
-				transactionVM.setMsg("transaction success......");
-			}
-			return SUCCESS;
-		}
-		return "show";
-	}
-
-	@Override
-	public TransactionVM getModel() {
-		transactionVM = new TransactionVM();
+	public TransactionViewModel getModel() {
+		transactionVM=new TransactionViewModel();
 		return transactionVM;
 	}
-
+	
 	@Override
 	public void setSession(Map<String, Object> session) {
-		this.session = session;
-
+		this.session=session;
 	}
-
+	
 	@Override
-	public void validate() {
-		if (transactionVM.getAmount() < 0 || transactionVM.getAmount() > 50000) {
-			addFieldError("amount", "AMOUNT NOT VALID");
+	public String execute() {
+		System.out.println("Transaction Ececute method: "+transactionVM.isPostBack());
+		if(!transactionVM.isPostBack()) {
+			System.out.println("get call transaction");
+			return Action.NONE;  
+		}
+		else {
+			System.out.println("post : "+transactionVM.getAmount()+transactionVM.getTransChoice());
+			if(transactionVM.getTransChoice().equals("WITHDRAW")) {
+				System.out.println("do withdraw");
+				if(transactionService.checkBalance(transactionVM.getAmount())) {
+					transactionService.withdraw(transactionVM.getAmount());
+					addActionMessage("You have successfully Withdraw "+transactionVM.getAmount()+" RS");
+				}
+				else
+					addActionError("Withdraw fail...!!! Not sufficient balance");
+			}
+			else{
+				System.out.println("do deposit");
+				transactionService.deposit(transactionVM.getAmount());
+				addActionMessage("You have successfully Deposited "+transactionVM.getAmount()+" RS");
+			}
+			return Action.SUCCESS;  
 		}
 	}
-
+	
+	@Override
+	public void validate() {  
+		if(transactionVM.isPostBack()) {
+			System.out.println("validate here");
+			if(transactionVM.getAmount()<=100)
+				addFieldError("amount","Please Enter Valid Amount"); 
+			if(transactionVM.getTransChoice()==null)
+				addFieldError("transChoice","Please select transaction type"); 
+		}
+	}
 }
